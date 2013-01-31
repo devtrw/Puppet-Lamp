@@ -1,0 +1,4 @@
+<% @allListenPorts.uniq.each do |port| -%>
+Listen <%= port %>
+NameVirtualHost *:<%= port %>
+<% end -%>

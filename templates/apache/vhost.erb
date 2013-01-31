@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+
+    ServerName <%= serverName %>
+    DocumentRoot <%= documentRoot %>
+
+    <Directory <%= documentRoot %> >
+    <% @directives.sort.each do |dName| -%>
+        <%= [dName,directives[dName]].join(' ')  %>
+    <% end -%></Directory>
+
+    LogLevel <%= vhostLogLevel %>
+    ErrorLog <%= vhostLogRoot %>/error_log
+    CustomLog <%= vhostLogRoot %>/access_log common
+
+</VirtualHost>
