@@ -14,7 +14,7 @@ with the following config:
     mod "lamp",
         :git => "git@bitbucket.org:devtrw/puppet-lamp.git"'
 
-dependency 'devtrw/composer',  '0.0.1'
+# dependency 'devtrw/composer',  '0.0.1'
 dependency 'example42/apache', '2.0.7'
 dependency 'example42/mysql',  '2.0.7'
 dependency 'example42/php',    '2.0.8'
