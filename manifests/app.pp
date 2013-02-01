@@ -64,7 +64,13 @@
 #
 # [*sslVhosts*]
 #   A hash of vhosts and their key/cert locations. If [*useSsl*] is set to true
-#   a vhost will be created for each value present.
+#   a vhost will be created for each value present. For example:
+#   {
+#       "example.com" => {
+#           "cert" => "/etc/ssl/certs/ssl-cert-snakeoil.pem",
+#           "key"  => "/etc/ssl/private/ssl-cert-snakeoil.key"
+#       }
+#   }
 #
 # [*symfony2App*]
 #   If set to true will configure the application for symfony2
@@ -94,12 +100,7 @@ define lamp::app (
     $installComposer   = false,
     $serverName        = $::lamp::serverName,
     $serverAliases     = ["www.${serverName}"],
-    $sslVhosts         = {
-        "${serverName}" => {
-            "cert" => "/etc/ssl/certs/ssl-cert-snakeoil.pem",
-            "key"  => "/etc/ssl/private/ssl-cert-snakeoil.key"
-        }
-    },
+    $sslVhosts         = {},
     $symfony2App       = false,
     $symfony2Root      = $sourceLocation,
     $symfony2Secret    = "UNSET",
