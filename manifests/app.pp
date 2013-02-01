@@ -135,26 +135,34 @@ environment"
         }
     }
 
+    anchor { "lamp::app::${name}::begin": }
+
     # Create user for app if necessary
     if ( !defined(User[$name]) )
     {
         user { $name:
+            before     => Anchor["lamp::app::${name}::end"],
             ensure     => "present",
-            managehome => "true"
+            managehome => "true",
+            require    => Anchor["lamp::app::${name}::begin"]
         }
     }
 
     # Setup database
     ::mysql::user { $databaseUser:
+        before         => Anchor["lamp::app::${name}::end"],
         mysql_host     => $databaseHost,
         mysql_password => $databasePassword,
-        mysql_user     => $databaseUser
+        mysql_user     => $databaseUser,
+        require        => Anchor["lamp::app::${name}::begin"]
     }
     -> ::mysql::grant { $databaseName:
+        before         => Anchor["lamp::app::${name}::end"],
         mysql_host     => $databaseHost,
         mysql_db       => $databaseName,
         mysql_password => $databasePassword,
-        mysql_user     => $databaseUser
+        mysql_user     => $databaseUser,
+        require        => Anchor["lamp::app::${name}::begin"]
     }
 
     $defaultApacheDirectives = {
@@ -167,22 +175,26 @@ environment"
 
     # Setup virtual host
     ::lamp::config::apache::vhost { "${serverName}-80":
+        before         => Anchor["lamp::app::${name}::end"],
         directives     => $realApacheDirectives,
         documentRoot   => $documentRoot,
         serverAliases  => $serverAliases,
         serverName     => $serverName,
         vhostLogLevel  => $apacheLogLevel,
-        vhostLogRoot   => $apacheLogRoot
+        vhostLogRoot   => $apacheLogRoot,
+        require        => Anchor["lamp::app::${name}::begin"]
     }
 
     # Setup ssl vhosts if necessary
     if ($useSsl == true) {
         $sslDomains = keys($sslVhosts)
         ::lamp::config::apache::vhost { $sslDomains:
+            before         => Anchor["lamp::app::${name}::end"],
             directives     => $realApacheDirectives,
             documentRoot   => $documentRoot,
             vhostLogLevel  => $apacheLogLevel,
             vhostLogRoot   => $apacheLogRoot,
+            require        => Anchor["lamp::app::${name}::begin"],
             sslVhosts      => $sslVhosts,
             useSsl         => true
         }
@@ -194,7 +206,11 @@ environment"
         default => $composerDir
     }
     if ($installComposer) {
-        class { "::composer": installLocation => $composerDir }
+        class { "::composer":
+            before          => Anchor["lamp::app::${name}::end"],
+            installLocation => $composerDir,
+            require         => Anchor["lamp::app::${name}::begin"]
+        }
     }
 
     # Create symfony config if specified
@@ -206,11 +222,17 @@ following command can generate one for you: \n\n\
 < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c\${1:-32};echo;\n\n")
         }
         ::lamp::config::php::symfony2 { $symfony2Root:
+            before           => Anchor["lamp::app::${name}::end"],
             databaseHost     => $databaseHost,
             databaseName     => $databaseName,
             databasePassword => $databasePassword,
             databaseUser     => $databaseUser,
-            secret           => $symfony2Secret
+            secret           => $symfony2Secret,
+            require          => Anchor["lamp::app::${name}::begin"]
         }
+    }
+
+    anchor { "lamp::app::${name}::end":
+        require => Anchor["lamp::app::${name}::begin"]
     }
 }

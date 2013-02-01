@@ -122,6 +122,7 @@ The php dev module is installed automatically, please remove it from \
 
     # Configure the server
     class { "lamp::config::system":
+        before   => Anchor["init::end"]
         require  => Anchor["init::begin"],
         timezone => $timezones[$timezone][localtimePath]
     }

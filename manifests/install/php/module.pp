@@ -25,6 +25,7 @@ define lamp::install::php::module {
         # DBUnit v1.2.1.
         ::php::pear::module { "pear.symfony.com/Yaml-2.1.6":
             alldeps     => true,
+            before      => Anchor["lamp::install::php::module::${name}::end"],
             notify      => Service["apache2"],
             require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
@@ -33,6 +34,7 @@ define lamp::install::php::module {
             before      => Anchor["lamp::install::php::module::${name}::end"],
             alldeps     => true,
             notify      => Service["apache2"],
+            require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
         }
     } elsif ( $name == "git" ) {
@@ -45,11 +47,11 @@ define lamp::install::php::module {
         }
     } elsif ( $name == "oauth" ) {
         package { "libpcre3-dev":
-            ensure  => "latest",
-            require => Anchor["lamp::install::php::module::${name}::begin"]
+            ensure  => "latest"
         }
         -> ::php::pecl::module { "oauth":
             before      => Anchor["lamp::install::php::module::${name}::end"],
+            require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
         }
         -> file { "/etc/php5/conf.d/oauth.ini":
@@ -67,13 +69,14 @@ define lamp::install::php::module {
     } elsif ( $name == "xdebug" ) {
         ::php::pecl::module { "xdebug":
             before      => Anchor["lamp::install::php::module::${name}::end"],
-            notify  => Service["apache2"],
+            notify      => Service["apache2"],
+            require     => Anchor["lamp::install::php::module::${name}::begin"]
             use_package => false
         }
         -> file { "/etc/php5/conf.d/xdebug.ini":
-            ensure  => file,
             content => template("lamp/php/xdebug.ini"),
-            notify  => Service["apache2"]
+            ensure  => file,
+            notify  => Service["apache2"],
         }
     } else {
         fail("PHP module \"${name}\" installation is not yet supported by devtrw-lamp")
