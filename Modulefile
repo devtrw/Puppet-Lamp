@@ -1,5 +1,5 @@
 name 'devtrw-lamp'
-version '0.0.5'
+version '0.0.6'
 
 author 'DevTRW'
 license ''
@@ -23,7 +23,10 @@ using:
 '
 
 # dependency 'devtrw/composer',  '0.0.1'
-dependency 'example42/apache', '2.0.7'
-dependency 'example42/mysql',  '2.0.7'
 # dependency 'example42/php',    '2.0.8'
-dependency 'puppetlabs/apt',   '1.1.0'
+
+dependency 'example42/apache',  '2.0.7'
+dependency 'example42/mysql',   '2.0.7'
+dependency 'example42/puppi',   '>= 2.0.0'
+dependency 'puppetlabs/apt',    '1.1.0'
+dependency 'puppetlabs/stdlib', '3.2.0'

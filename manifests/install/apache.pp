@@ -4,7 +4,8 @@
 #
 class lamp::install::apache (
     $listenPorts,
-    $enableModSSL,
+    $developmentEnvironment,
+    $enableModSsl,
     $enableModRewrite,
     $serverName
 ){
@@ -32,6 +33,12 @@ class lamp::install::apache (
         notify  => Service["apache2"],
         require => Package["apache2"]
     }
+    file { "/etc/apache2/conf.d/security":
+        ensure => "file",
+        content => template("lamp/apache/security.conf.erb"),
+        notify  => Service["apache2"],
+        require => Package["apache2"]
+    }
 
     exec { "disable-vhost-000-default":
         command => "a2dissite 000-default",
@@ -51,12 +58,12 @@ class lamp::install::apache (
     }
 
     # Mod SSL
-    $ensureApacheModSSL = $enableModSSL ? {
+    $ensureApacheModSsl = $enableModSsl ? {
         true    => "present",
         default => "absent"
     }
     ::apache::module{ "ssl":
-        ensure => $ensureApacheModSSL
+        ensure => $ensureApacheModSsl
     }
 
     anchor{"lamp::install::apache::end":

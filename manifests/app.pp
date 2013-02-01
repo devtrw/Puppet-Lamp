@@ -1,6 +1,8 @@
 # == Resource: lamp::app
 #
 #   This resource handles installing and configuring php/mysql app
+#   TODO:
+#       $serverAliases
 #
 # === Parameters
 #
@@ -60,6 +62,10 @@
 # [*serverAliases*]
 #   An array of aliases for the virtual host. Default is ["www.${serverName}"]
 #
+# [*sslVhosts*]
+#   A hash of vhosts and their key/cert locations. If [*useSsl*] is set to true
+#   a vhost will be created for each value present.
+#
 # [*symfony2App*]
 #   If set to true will configure the application for symfony2
 #
@@ -69,6 +75,10 @@
 # [*symfony2secret*]
 #   The key used for the symfony 2 configuration. This is required for symfony2
 #   apps
+#
+# [*useSsl*]
+#   If set to true, additional vhosts will be created on port 443 for the hosts
+#   in [*sslVhosts*]
 #
 define lamp::app (
     $databasePassword,
@@ -84,10 +94,47 @@ define lamp::app (
     $installComposer   = false,
     $serverName        = $::lamp::serverName,
     $serverAliases     = ["www.${serverName}"],
+    $sslVhosts         = {
+        "${serverName}" => {
+            "cert" => "/etc/ssl/certs/ssl-cert-snakeoil.pem",
+            "key"  => "/etc/ssl/private/ssl-cert-snakeoil.key"
+        }
+    },
     $symfony2App       = false,
     $symfony2Root      = $sourceLocation,
-    $symfony2Secret    = "UNSET"
+    $symfony2Secret    = "UNSET",
+    $useSsl            = false
 ) {
+    validate_absolute_path(
+        $apacheLogRoot, $composerDir, $documentRoot, $sourceLocation,
+        $symfony2Root
+    )
+    validate_array($serverAliases)
+    validate_bool($installComposer, $symfony2App, $useSsl)
+    validate_hash($apacheDirectives, $sslVhosts)
+    validate_string(
+        $apacheLogLevel, $databaseHost, $databaseName, $databasePassword,
+        $databaseUser, $serverName
+    )
+
+    if ($::lamp::developmentEnvironment == false)
+    and ($databasePassword == "password") {
+        fail(
+"The \$lamp::app::database password cannot be \"password\" in a production \
+environment"
+        )
+    }
+
+    if ($useSsl == true) {
+        if ($::lamp::apacheModSsl != true) {
+            fail("Apache mod ssl must be enabled. See \$lamp::apacheModSsl")
+        } elsif ($sslVhosts == {}) {
+            fail(
+"To enable ssl you must specify which hosts in the \$sslVhosts param"
+            )
+        }
+    }
+
     # Create user for app if necessary
     if ( !defined(User[$name]) )
     {
@@ -119,12 +166,26 @@ define lamp::app (
     $realApacheDirectives = merge ($defaultApacheDirectives, $apacheDirectives)
 
     # Setup virtual host
-    ::lamp::config::apache::vhost { $serverName:
+    ::lamp::config::apache::vhost { "${serverName}-80":
         directives     => $realApacheDirectives,
         documentRoot   => $documentRoot,
+        serverAliases  => $serverAliases,
+        serverName     => $serverName,
         vhostLogLevel  => $apacheLogLevel,
-        vhostLogRoot   => $apacheLogRoot,
-        serverAliases  => $serverAliases
+        vhostLogRoot   => $apacheLogRoot
+    }
+
+    # Setup ssl vhosts if necessary
+    if ($useSsl == true) {
+        $sslDomains = keys($sslVhosts)
+        ::lamp::config::apache::vhost { $sslDomains:
+            directives     => $realApacheDirectives,
+            documentRoot   => $documentRoot,
+            vhostLogLevel  => $apacheLogLevel,
+            vhostLogRoot   => $apacheLogRoot,
+            sslVhosts      => $sslVhosts,
+            useSsl         => true
+        }
     }
 
     # Install composer if necessary

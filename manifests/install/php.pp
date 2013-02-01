@@ -9,6 +9,8 @@ class lamp::install::php (
     $settings,
     $version
 ) {
+
+    # Environment based ini settings
     if ($developmentEnvironment == true) {
         $displayErrors         = "on"
         $displayStartupErrors  = "on"
@@ -28,8 +30,21 @@ class lamp::install::php (
     $mergedSettings = merge($defaultSettings, $settings)
     $settingTargets = keys($mergedSettings)
 
+    # Install utilities for a development environment
+    if ($developmentEnvironment == true) {
+        lamp::install::php::module { "dbunit":
+            require => Class["::php::pear"]
+        }
+        -> lamp::install::php::module { "xdebug":
+            before => Anchor["lamp::install::php::end"]
+        }
+    }
+
     anchor{ "lamp::install::php::begin": }
     -> class { "::php": version => $version }
+    -> class { "::php::devel": }
+    -> class { "::php::pear": }
+    -> ::php::pear::config { "auto_discover": value => "1" }
     -> lamp::install::php::module { $modules: }
     -> lamp::config::php::ini { $settingTargets: settings => $mergedSettings }
     -> anchor { "lamp::install::php::end": }

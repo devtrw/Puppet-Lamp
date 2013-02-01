@@ -13,7 +13,7 @@
 #   NameVirtualHost *:<PORT> and Listen entries to the apache ports.conf file.
 #   Duplicate ports are ignore.
 #
-# [*apacheModSSL*]
+# [*apacheModSsl*]
 #   Enables the ssl mod for Apache and adds port 443 to [*apacheListenPorts*]
 #
 # [*apacheModRewrite*]
@@ -25,6 +25,20 @@
 # [*developmentEnvironment*]
 #   Sets up the environment for development:
 #     * Sets the php.ini defaults to display errors
+#     * Installs PHPUnit/DBUnit
+#     * Installs xdebug
+#
+# [*mysqlConfig*]
+#   Sets configuration directives in the /etc/mysql/conf.d/settings.conf file.
+#   For example to add:
+#       [mysqld]
+#       wait_timeout = 31536000
+#   Pass in:
+#   {
+#       "mysqld" => {
+#           "wait_timeout" => "31536000"
+#       }
+#   }
 #
 # [*mysqlRootPassword]
 #   The password set for the mysql root user. If set to "auto" a randomly
@@ -49,10 +63,11 @@
 #
 class lamp (
     $apacheListenPorts      = [80],
-    $apacheModSSL           = false,
+    $apacheModSsl           = false,
     $apacheModRewrite       = true,
     $aptRepositories        = [],
     $developmentEnvironment = true,
+    $mysqlConfig            = {},
     $mysqlRootPassword      = "auto",
     $phpIniSettings         = {},
     $phpModules             = [],
@@ -60,7 +75,18 @@ class lamp (
     $serverName             = $::fqdn,
     $timezone               = "PST"
 ) {
-    anchor { "init::begin": }
+    validate_array($apacheListenPorts, $aptRepositories, $phpModules)
+    validate_bool($apacheModSsl, $apacheModRewrite, $developmentEnvironment)
+    validate_hash($phpIniSettings, $mysqlConfig)
+    validate_string($mysqlRootPassword, $phpVersion, $serverName, $timezone)
+
+    if ($developmentEnvironment == false)
+    and ($mysqlRootPassword == "password") {
+        fail(
+"The \$lamp::mysqlRootPassword cannot be \"password\" in a production \
+environment"
+        )
+    }
 
     # Ensure ubuntu
     if ($::operatingsystem != "ubuntu") {
@@ -86,28 +112,41 @@ present. This is usually because factor could not find it.")
         fail("The timezone ${timezone} is not supported")
     }
 
+    if ( member($phpModules, "dev") ) {
+            fail("\
+The php dev module is installed automatically, please remove it from \
+\$phpModules")
+    }
+
+    anchor { "init::begin": }
+
     # Configure the server
     class { "lamp::config::system":
+        require  => Anchor["init::begin"],
         timezone => $timezones[$timezone][localtimePath]
     }
 
     $defaultRepositories = ["ppa:ondrej/php5"]
     $allAptRepositories = flatten($defaultRepositories, $aptRepositories)
     include ::apt
-    ::apt::ppa { $allAptRepositories: }
+    ::apt::ppa { $allAptRepositories:
+        require => Class["lamp::config::system"]
+    }
 
     # Install apache
     class { "lamp::install::apache":
-        listenPorts      => $apacheListenPorts,
-        enableModRewrite => $apacheModRewrite,
-        enableModSSL     => $apacheModSSL,
-        serverName       => $serverName,
-        require          => ::Apt::Ppa[$allAptRepositories],
-        before           => Anchor["init::end"]
+        listenPorts            => $apacheListenPorts,
+        developmentEnvironment => $developmentEnvironment,
+        enableModRewrite       => $apacheModRewrite,
+        enableModSsl           => $apacheModSsl,
+        serverName             => $serverName,
+        require                => ::Apt::Ppa[$allAptRepositories],
+        before                 => Anchor["init::end"]
     }
 
     # Install mysql
     class { "lamp::install::mysql":
+        config       => $mysqlConfig,
         rootPassword => $mysqlRootPassword,
         require      => ::Apt::Ppa[$allAptRepositories],
         before       => Anchor["init::end"]

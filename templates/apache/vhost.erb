@@ -1,15 +1,34 @@
-<VirtualHost *:80>
+<VirtualHost *:<%= useSsl ? 443 : 80 %>>
 
-    ServerName <%= serverName %>
+    ServerName <%= realServerName %>
     DocumentRoot <%= documentRoot %>
 
     <Directory <%= documentRoot %> >
-    <% @directives.sort.each do |dName| -%>
+    <% directives.sort.each do |dName| -%>
         <%= [dName,directives[dName]].join(' ')  %>
     <% end -%></Directory>
 
     LogLevel <%= vhostLogLevel %>
-    ErrorLog <%= vhostLogRoot %>/error_log
-    CustomLog <%= vhostLogRoot %>/access_log common
+    ErrorLog <%= vhostLogRoot %>/<%= realServerName %>-error_log
+    CustomLog <%= vhostLogRoot %>/<%= realServerName %>-access_log common
+    <% if useSsl -%>
 
+        SSLEngine on
+
+        SSLCertificateFile <%= sslVhosts[realServerName]["cert"] %>
+        SSLCertificateKeyFile <%= sslVhosts[realServerName]["key"] %>
+
+        # Only enable ssl for php files, no need for unnecessary processing on
+        # static pages/files
+        <FilesMatch "\.php$">
+            SSLOptions +StdEnvVars
+        </FilesMatch>
+
+        # Deal with ssl issues in early versions of IE
+        BrowserMatch "MSIE [2-6]" \
+          nokeepalive ssl-unclean-shutdown \
+          downgrade-1.0 force-response-1.0
+        # MSIE 7 and newer should be able to use keepalive
+        BrowserMatch "MSIE [17-9]" ssl-unclean-shutdown
+    <% end -%>
 </VirtualHost>

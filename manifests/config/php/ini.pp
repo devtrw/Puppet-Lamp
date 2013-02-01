@@ -11,13 +11,14 @@ define lamp::config::php::ini (
     -> ::php::augeas { "php-apache-${name}":
         target  => "/etc/php5/apache2/php.ini",
         entry   => $name,
-        value   => $settings[$name]
+        value   => $settings[$name],
+        require => Package["php5"]
     }
     -> ::php::augeas { "php-cli-${name}":
         target => "/etc/php5/cli/php.ini",
         entry  => $name,
         value  => $settings[$name],
-        before => Anchor["lamp::config::php::ini::${name}::end"]
+        require => Package["php5"]
     }
     -> anchor{ "lamp::config::php::ini::${name}::end": }
 }

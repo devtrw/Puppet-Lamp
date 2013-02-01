@@ -1,0 +1,6 @@
+<% config.each do |category, directives| -%>
+[<%= category %>]
+<% directives.each do |dName, dValue| -%>
+<%= "#{dName} = #{dValue}" %>
+<% end %>
+<% end -%>
