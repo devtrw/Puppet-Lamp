@@ -41,7 +41,11 @@ class lamp::install::php (
     }
 
     anchor{ "lamp::install::php::begin": }
-    -> class { "::php": version => $version }
+    -> class { "::php":
+        service              => "apache2",
+        service_autorestart  => true,
+        version              => $version
+    }
     -> class { "::php::devel": }
     -> class { "::php::pear": }
     -> ::php::pear::config { "auto_discover": value => "1" }
