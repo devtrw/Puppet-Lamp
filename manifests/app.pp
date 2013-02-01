@@ -39,6 +39,12 @@
 #   vendor directory if not present. Defaults to [*sourceLocation*]. If
 #   [*symfony2app*] is true it will be set to [*symfony2root*]
 #
+# [*createDatabase*]
+#   Set to false to disable creation of the database and user
+#
+# [*createUser*]
+#   Will create a user with the name of this resource. Default is true
+#
 # [*databaseHost*]
 #   The host for the database
 #
@@ -87,16 +93,18 @@
 #   in [*sslVhosts*]
 #
 define lamp::app (
-    $databasePassword,
     $sourceLocation,
     $apacheDirectives  = {},
     $apacheLogLevel    = "warn",
     $apacheLogRoot     = "/var/log/apache2",
     $composerDir       = $sourceLocation,
+    $createUser        = true,
+    $createDatabase    = true,
     $databaseHost      = "localhost",
     $databaseName      = $name,
-    $databaseUser      = $name,
+    $databasePassword  = "UNSET",
     $documentRoot      = $sourceLocation,
+    $databaseUser      = $name,
     $installComposer   = false,
     $serverName        = $::lamp::serverName,
     $serverAliases     = ["www.${serverName}"],
@@ -118,13 +126,18 @@ define lamp::app (
         $databaseUser, $serverName
     )
 
-    if ($::lamp::developmentEnvironment == false)
-    and ($databasePassword == "password") {
-        fail(
+    if ($createDatabase == true) {
+        if ($::lamp::developmentEnvironment == false)
+        and ($databasePassword == "password") {
+            fail(
 "The \$lamp::app::database password cannot be \"password\" in a production \
 environment"
-        )
+            )
+        } elsif ($databasePassword == "UNSET") {
+            fail("A database password must be set unless \$createDatabase is false")
+        }
     }
+
 
     if ($useSsl == true) {
         if ($::lamp::apacheModSsl != true) {
@@ -139,7 +152,7 @@ environment"
     anchor { "lamp::app::${name}::begin": }
 
     # Create user for app if necessary
-    if ( !defined(User[$name]) )
+    if (!defined(User[$name])) and ($createUser == true)
     {
         user { $name:
             before     => Anchor["lamp::app::${name}::end"],
@@ -150,20 +163,22 @@ environment"
     }
 
     # Setup database
-    ::mysql::user { $databaseUser:
-        before         => Anchor["lamp::app::${name}::end"],
-        mysql_host     => $databaseHost,
-        mysql_password => $databasePassword,
-        mysql_user     => $databaseUser,
-        require        => Anchor["lamp::app::${name}::begin"]
-    }
-    -> ::mysql::grant { $databaseName:
-        before         => Anchor["lamp::app::${name}::end"],
-        mysql_host     => $databaseHost,
-        mysql_db       => $databaseName,
-        mysql_password => $databasePassword,
-        mysql_user     => $databaseUser,
-        require        => Anchor["lamp::app::${name}::begin"]
+    if ($createDatabase == true) {
+        ::mysql::user { $databaseUser:
+            before         => Anchor["lamp::app::${name}::end"],
+            mysql_host     => $databaseHost,
+            mysql_password => $databasePassword,
+            mysql_user     => $databaseUser,
+            require        => Anchor["lamp::app::${name}::begin"]
+        }
+        -> ::mysql::grant { $databaseName:
+            before         => Anchor["lamp::app::${name}::end"],
+            mysql_host     => $databaseHost,
+            mysql_db       => $databaseName,
+            mysql_password => $databasePassword,
+            mysql_user     => $databaseUser,
+            require        => Anchor["lamp::app::${name}::begin"]
+        }
     }
 
     $defaultApacheDirectives = {

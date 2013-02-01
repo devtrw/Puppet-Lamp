@@ -8,10 +8,16 @@ define lamp::install::php::module {
 
     Exec { path => "/bin:/usr/bin:/usr/sbin" }
 
-    if ( member(["curl", "mysql", "intl", "xsl"], $name) ) {
+    if ( member(["curl", "gd", "intl", "mysql", "xsl"], $name) ) {
         ::php::module { $name:
             before  => Anchor["lamp::install::php::module::${name}::end"],
             require => Anchor["lamp::install::php::module::${name}::begin"]
+        }
+    } elsif ( member(["imagick"], $name) ) {
+        ::php::module { $name:
+            before        => Anchor["lamp::install::php::module::${name}::end"],
+            require       => Anchor["lamp::install::php::module::${name}::begin"],
+            version       => "latest"
         }
     } elsif ( member(["apc", "soap"], $name) ) {
         ::php::module { $name:
