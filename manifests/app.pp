@@ -107,7 +107,7 @@ define lamp::app (
     $databaseUser      = $name,
     $installComposer   = false,
     $serverName        = $::lamp::serverName,
-    $serverAliases     = ["www.${serverName}"],
+    $serverAliases     = [],
     $sslVhosts         = {},
     $symfony2App       = false,
     $symfony2Root      = $sourceLocation,

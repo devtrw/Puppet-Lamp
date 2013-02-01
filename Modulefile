@@ -1,5 +1,5 @@
 name 'devtrw-lamp'
-version '0.0.11'
+version '0.1.1'
 
 author 'DevTRW'
 license ''

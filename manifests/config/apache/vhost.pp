@@ -7,7 +7,7 @@ define lamp::config::apache::vhost (
     $documentRoot,
     $vhostLogLevel,
     $vhostLogRoot,
-    $serverAliases = {},
+    $serverAliases = [],
     $serverName    = "UNSET",
     $sslVhosts     = {},
     $useSsl        = false

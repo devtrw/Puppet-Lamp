@@ -1,6 +1,9 @@
 <VirtualHost *:<%= useSsl ? 443 : 80 %>>
 
     ServerName <%= realServerName %>
+<% serverAliases.uniq.each do |sAlias| -%>
+    ServerAlias <%= sAlias %>
+<% end -%>
     DocumentRoot <%= documentRoot %>
 
     <Directory <%= documentRoot %> >
