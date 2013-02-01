@@ -70,13 +70,14 @@ define lamp::install::php::module {
         ::php::pecl::module { "xdebug":
             before      => Anchor["lamp::install::php::module::${name}::end"],
             notify      => Service["apache2"],
-            require     => Anchor["lamp::install::php::module::${name}::begin"]
+            require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
         }
         -> file { "/etc/php5/conf.d/xdebug.ini":
+            before  => Anchor["lamp::install::php::module::${name}::end"],
             content => template("lamp/php/xdebug.ini"),
             ensure  => file,
-            notify  => Service["apache2"],
+            notify  => Service["apache2"]
         }
     } else {
         fail("PHP module \"${name}\" installation is not yet supported by devtrw-lamp")
