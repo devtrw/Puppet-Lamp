@@ -1,5 +1,5 @@
 name 'devtrw-lamp'
-version '0.1.1'
+version '0.1.2'
 
 author 'DevTRW'
 license ''
@@ -22,7 +22,7 @@ using:
         :ref => "2023c5f" #2.0.8
 '
 
-# dependency 'devtrw/composer',  '0.0.1'
+# dependency 'devtrw/composer',  '0.0.3'
 # dependency 'example42/php',    '2.0.8'
 
 dependency 'example42/apache',  '2.0.7'

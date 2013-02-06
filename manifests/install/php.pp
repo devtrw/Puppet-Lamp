@@ -35,7 +35,11 @@ class lamp::install::php (
         lamp::install::php::module { "dbunit":
             require => Class["::php::pear"]
         }
-        -> lamp::install::php::module { "xdebug":
+        -> lamp::install::php::module { "xdebug": }
+        -> lamp::install::php::module { "phpmd": }
+        -> lamp::install::php::module { "phpcpd": }
+        -> lamp::install::php::module { "xsl": }
+        -> lamp::install::php::module { "phpcs":
             before => Anchor["lamp::install::php::end"]
         }
     }

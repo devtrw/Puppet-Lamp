@@ -27,6 +27,7 @@
 #     * Sets the php.ini defaults to display errors
 #     * Installs PHPUnit/DBUnit
 #     * Installs xdebug
+#     * Installs phpcs
 #
 # [*mysqlConfig*]
 #   Sets configuration directives in the /etc/mysql/conf.d/settings.conf file.

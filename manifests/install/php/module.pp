@@ -72,6 +72,27 @@ define lamp::install::php::module {
             require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
         }
+    } elsif ( $name == "phpcs" ) {
+        ::php::pear::module { "pear/PHP_CodeSniffer":
+            before           => Anchor["lamp::install::php::module::${name}::end"],
+            notify           => Service["apache2"],
+            require          => Anchor["lamp::install::php::module::${name}::begin"],
+            use_package      => false
+        }
+    } elsif ( $name == "phpcpd" ) {
+        ::php::pear::module { "pear.phpunit.de/phpcpd":
+            before           => Anchor["lamp::install::php::module::${name}::end"],
+            notify           => Service["apache2"],
+            require          => Anchor["lamp::install::php::module::${name}::begin"],
+            use_package      => false
+        }
+    } elsif ( $name == "phpmd" ) {
+        ::php::pear::module { "pear.phpmd.org/PHP_PMD":
+            before           => Anchor["lamp::install::php::module::${name}::end"],
+            notify           => Service["apache2"],
+            require          => Anchor["lamp::install::php::module::${name}::begin"],
+            use_package      => false
+        }
     } elsif ( $name == "xdebug" ) {
         ::php::pecl::module { "xdebug":
             before      => Anchor["lamp::install::php::module::${name}::end"],

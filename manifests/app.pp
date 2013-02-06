@@ -229,14 +229,16 @@ environment"
         }
     }
 
-    # Create symfony config if specified
-    if ($symfony2App ) {
+    # Symfony2 specific stuff
+    if ($symfony2App) {
+
         if ($symfony2Secret == "UNSET") {
             fail( "\n\
 symfony2Secret must be defined for symfony2 applications. The \
 following command can generate one for you: \n\n\
 < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c\${1:-32};echo;\n\n")
         }
+
         ::lamp::config::php::symfony2 { $symfony2Root:
             before           => Anchor["lamp::app::${name}::end"],
             databaseHost     => $databaseHost,
@@ -245,6 +247,17 @@ following command can generate one for you: \n\n\
             databaseUser     => $databaseUser,
             secret           => $symfony2Secret,
             require          => Anchor["lamp::app::${name}::begin"]
+        }
+
+        # Setup symfony2 coding standard if in development environment
+        if ($::lamp::developmentEnvironment == true) {
+            exec { "install-phpcs-standard-symfony2":
+                command => "git clone git://github.com/opensky/Symfony2-coding-standard.git Symfony2",
+                cwd     => "/usr/share/php/PHP/CodeSniffer/Standards",
+                unless  => "test -d /usr/share/php/PHP/CodeSniffer/Standards/Symfony2",
+                path    => "/usr/bin",
+                require => Lamp::Install::Php::Module["phpcs"]
+            }
         }
     }
 
