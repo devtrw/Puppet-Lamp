@@ -7,6 +7,7 @@ define lamp::config::apache::vhost (
     $documentRoot,
     $vhostLogLevel,
     $vhostLogRoot,
+    $priority      = "UNSET",
     $serverAliases = [],
     $serverName    = "UNSET",
     $sslVhosts     = {},
@@ -30,15 +31,20 @@ define lamp::config::apache::vhost (
         $realServerName = $serverName
     }
 
-    file { "/etc/apache2/sites-available/${siteName}":
+    $realSiteName = $priority ? {
+        "UNSET" => $siteName,
+        default => "${priority}-${siteName}"
+    }
+
+    file { "/etc/apache2/sites-available/${$realSiteName}":
         ensure  => "file",
         content => template("lamp/apache/vhost.erb"),
         notify  => Service["apache2"],
         require => Package["apache2"]
     }
-    -> exec { "enable-vhost-${siteName}":
-        command => "a2ensite ${siteName}",
-        unless  => "test -f /etc/apache2/sites-enabled/${siteName}",
+    -> exec { "enable-vhost-${realSiteName}":
+        command => "a2ensite ${realSiteName}",
+        unless  => "test -f /etc/apache2/sites-enabled/${realSiteName}",
         path    => "/usr/bin:/usr/sbin",
         notify  => Service["apache2"]
     }
