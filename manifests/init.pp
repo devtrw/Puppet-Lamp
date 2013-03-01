@@ -148,7 +148,7 @@ The php dev module is installed automatically, please remove it from \
 
     # Install php
     class { "lamp::install::php":
-        defaultTimezone        => $timezone,
+        defaultTimezone        => $timezones[$timezone][phpTimezone],
         developmentEnvironment => $developmentEnvironment,
         modules                => $phpModules,
         settings               => $phpIniSettings,
