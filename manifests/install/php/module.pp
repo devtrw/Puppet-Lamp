@@ -26,6 +26,14 @@ define lamp::install::php::module {
             require       => Anchor["lamp::install::php::module::${name}::begin"],
             version       => "latest"
         }
+    } elsif ( $name == "phpunit" ) {
+          ::php::pear::module { "pear.phpunit.de/PHPUnit":
+              before      => Anchor["lamp::install::php::module::${name}::end"],
+              alldeps     => true,
+              notify      => Service["apache2"],
+              require     => Anchor["lamp::install::php::module::${name}::begin"],
+              use_package => false
+          }
     } elsif ( $name == "dbunit" ) {
         # Make sure Yaml version is below 2.2. PHPUnit fails with Yaml 2.2 as of
         # DBUnit v1.2.1.

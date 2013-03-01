@@ -30,20 +30,6 @@ class lamp::install::php (
     $mergedSettings = merge($defaultSettings, $settings)
     $settingTargets = keys($mergedSettings)
 
-    # Install utilities for a development environment
-    if ($developmentEnvironment == true) {
-        lamp::install::php::module { "dbunit":
-            require => Class["::php::pear"]
-        }
-        -> lamp::install::php::module { "xdebug": }
-        -> lamp::install::php::module { "phpmd": }
-        -> lamp::install::php::module { "phpcpd": }
-        -> lamp::install::php::module { "xsl": }
-        -> lamp::install::php::module { "phpcs":
-            before => Anchor["lamp::install::php::end"]
-        }
-    }
-
     anchor{ "lamp::install::php::begin": }
     -> class { "::php":
         service              => "apache2",

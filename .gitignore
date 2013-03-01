@@ -1,0 +1,3 @@
+.idea
+tests/build/.vagrant
+tests/web/full/logs

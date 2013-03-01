@@ -72,7 +72,7 @@ class lamp (
     $mysqlRootPassword      = "auto",
     $phpIniSettings         = {},
     $phpModules             = [],
-    $phpVersion             = "5.4.11-1~precise+1",
+    $phpVersion             = "5.4.12-1~precise+1",
     $serverName             = $::fqdn,
     $timezone               = "PST"
 ) {
@@ -80,14 +80,6 @@ class lamp (
     validate_bool($apacheModSsl, $apacheModRewrite, $developmentEnvironment)
     validate_hash($phpIniSettings, $mysqlConfig)
     validate_string($mysqlRootPassword, $phpVersion, $serverName, $timezone)
-
-    if ($developmentEnvironment == false)
-    and ($mysqlRootPassword == "password") {
-        fail(
-"The \$lamp::mysqlRootPassword cannot be \"password\" in a production \
-environment"
-        )
-    }
 
     # Ensure ubuntu
     if ($::operatingsystem != "ubuntu") {

@@ -1,0 +1,14 @@
+Vagrant::Config.run do |config|
+    config.vm.box = "ubuntu-precise-aws"
+    config.vm.box_url = "http://s3.devtrw.com/vagrant/base/ubuntu/precise-aws.box"
+    config.vm.host_name = "puppet-composer-dev"
+    config.vm.network :hostonly, "192.168.33.106"
+    config.vm.share_folder "app-data", "/vagrant", "../../", :extra =>'dmode=777,fmode=777'
+    #config.vm.boot_mode = :gui
+    config.vm.customize [
+        "modifyvm", :id,
+        "--memory", 1740,
+        "--cpus", 1,
+        "--ioapic", "on"
+    ]
+end
