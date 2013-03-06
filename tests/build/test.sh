@@ -24,20 +24,31 @@ PUPPET_FILE="${SCRIPT_LOCATION}/Puppetfile"
 PUPPET_DIR="/etc/puppet"
 MODULE_DIR="${PUPPET_DIR}/modules/lamp"
 
-# Install ruby gems if necessary
-if ! "gem" -v $1 >/dev/null 2>&1
+# Check for apt-installs
+if ! "gem" -v $1 >/dev/null 2>&1; then
+    INSTALL_RUBYGEMS=true
+fi
+if ! echo -e "require 'augeas'\nputs Augeas.open" | ruby -rrubygems $1 >/dev/null 2>&1
 then
+    INSTALL_AUGEAS=true
+fi
+
+# Update in case gems or augeas need to be installed
+if [ -z INSTALL_RUBYGEMS ] || [ -z INSTALL_AUGEAS ]; then
+    apt-get update
+fi
+
+# Install ruby gems if necessary
+if [ -z INSTALL_RUBYGEMS ]; then
     echo -e "\n${GREEN}Installing rubygems"
     echo -e "===================${WHITE}"
     apt-get install -y "rubygems"
 fi
 
 # Install Augeas support if necessary
-if ! "echo -e \"require 'augeas'\nputs Augeas.open\" | ruby -rrubygems" -v $1 >/dev/null 2>&1
-then
+if [ -z INSTALL_AUGEAS ]; then
     echo -e "\n${GREEN}Installing Augeas for Puppet"
     echo -e "=================${WHITE}"
-    apt-get update
     apt-get install libaugeas-ruby -y
 fi
 
