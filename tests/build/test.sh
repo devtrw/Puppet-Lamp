@@ -35,6 +35,10 @@ fi
 # Install puppet librarian though rubygems
 if ! "librarian-puppet" -v $1 >/dev/null 2>&1
 then
+    echo -e "\n${GREEN}Installing Augeas for Puppet"
+    echo -e "=================${WHITE}"
+    apt-get install libaugeas-ruby -y
+
     echo -e "\n${GREEN}Installing librarian-puppet"
     echo -e "==========================${WHITE}"
     # The current release (0.9.7 4) of librarian puppet is currently buggy,
