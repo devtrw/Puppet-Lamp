@@ -34,19 +34,19 @@ then
 fi
 
 # Update in case gems or augeas need to be installed
-if [ -z INSTALL_RUBYGEMS ] || [ -z INSTALL_AUGEAS ]; then
+if [ -n "${INSTALL_RUBYGEMS}" ] || [ -n "${INSTALL_AUGEAS}" ]; then
     apt-get update
 fi
 
 # Install ruby gems if necessary
-if [ -z INSTALL_RUBYGEMS ]; then
+if [ -n "${INSTALL_RUBYGEMS}" ]; then
     echo -e "\n${GREEN}Installing rubygems"
     echo -e "===================${WHITE}"
     apt-get install -y "rubygems"
 fi
 
 # Install Augeas support if necessary
-if [ -z INSTALL_AUGEAS ]; then
+if [ -n "${INSTALL_AUGEAS}" ]; then
     echo -e "\n${GREEN}Installing Augeas for Puppet"
     echo -e "=================${WHITE}"
     apt-get install libaugeas-ruby -y
