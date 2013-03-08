@@ -89,6 +89,7 @@ define lamp::app (
     $serverName        = $::lamp::serverName,
     $serverAliases     = [],
     $sslVhosts         = {},
+    $userShell         = "/bin/bash",
     $useSsl            = false
 ) {
     validate_absolute_path($apacheLogRoot, $documentRoot)
@@ -128,6 +129,7 @@ define lamp::app (
             before     => Anchor["lamp::app::${name}::end"],
             ensure     => "present",
             managehome => "true",
+            shell      => $userShell,
             require    => Anchor["lamp::app::${name}::begin"]
         }
     }
