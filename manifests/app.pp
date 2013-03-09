@@ -130,7 +130,8 @@ define lamp::app (
             ensure     => "present",
             managehome => "true",
             shell      => $userShell,
-            require    => Anchor["lamp::app::${name}::begin"]
+            require    => Anchor["lamp::app::${name}::begin"],
+            groups     => 'www-data'
         }
     }
 
