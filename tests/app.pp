@@ -4,7 +4,7 @@ class { "lamp":
     developmentEnvironment => true,
     serverName             => 'puppet-lamp.dev',
     phpModules             => [
-        "curl", "gd", "intl", "mysql", "xsl",
+        "curl", "gd", "intl", "mysql", "xsl", "sqlite",
         "imagick",
         "apc", "soap",
         "git",
