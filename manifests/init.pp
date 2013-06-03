@@ -121,7 +121,7 @@ The php dev module is installed automatically, please remove it from \
     }
 
     $defaultRepositories = ["ppa:ondrej/php5"]
-    $allAptRepositories = flatten($defaultRepositories, $aptRepositories)
+    $allAptRepositories = flatten([$defaultRepositories, $aptRepositories])
     include ::apt
     ::apt::ppa { $allAptRepositories:
         require => Class["lamp::config::system"]
