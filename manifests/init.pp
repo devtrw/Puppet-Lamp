@@ -72,7 +72,7 @@ class lamp (
     $mysqlRootPassword      = "auto",
     $phpIniSettings         = {},
     $phpModules             = [],
-    $phpVersion             = "5.4.15-1~precise+1",
+    $phpVersion             = "5.4.17~rc1-2~precise+1",
     $serverName             = $::fqdn,
     $timezone               = "PST"
 ) {
