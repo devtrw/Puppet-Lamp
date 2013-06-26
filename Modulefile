@@ -1,5 +1,5 @@
 name 'devtrw-lamp'
-version '0.2.6'
+version '0.2.7'
 
 author 'DevTRW'
 license 'MIT'
@@ -15,12 +15,16 @@ using:
     mod "php",
         :git => "git@github.com:example42/puppet-php.git",
         :ref => "2023c5f" #2.0.8
+
+    mod "mysql",
+        :git => "git@github.com:example42/puppet-mysql",
+        :ref => "911e8bd8f9"
 '
 
 # dependency 'example42/php',    '2.0.8'
 
 dependency 'example42/apache',  '2.0.7'
-dependency 'example42/mysql',   '2.0.7'
+#dependency 'example42/mysql',   '2.0.7'
 dependency 'example42/puppi',   '>= 2.0.0'
 dependency 'puppetlabs/apt',    '1.1.0'
 dependency 'puppetlabs/stdlib', '3.2.0'
