@@ -16,7 +16,7 @@
 # Set to one of:  Full | OS | Minimal | Minor | Major | Prod
 # where Full conveys the most information, and Prod the least.
 #
-ServerTokens <%= developmentEnvironment ? "Full" : "Prod" -%>
+ServerTokens <%= @developmentEnvironment ? "Full" : "Prod" -%>
 
 #
 # Optionally add a line containing the server version and virtual host
@@ -26,7 +26,7 @@ ServerTokens <%= developmentEnvironment ? "Full" : "Prod" -%>
 # Set to "EMail" to also include a mailto: link to the ServerAdmin.
 # Set to one of:  On | Off | EMail
 #
-ServerSignature <%= developmentEnvironment ? "On" : "Off" -%>
+ServerSignature <%= @developmentEnvironment ? "On" : "Off" -%>
 
 #
 # Allow TRACE method

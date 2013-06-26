@@ -1,6 +1,6 @@
-<% config.each do |category, directives| -%>
+<% @config.each do |category, directives| -%>
 [<%= category %>]
-<% directives.each do |dName, dValue| -%>
+<% @directives.each do |dName, dValue| -%>
 <%= "#{dName} = #{dValue}" %>
 <% end %>
 <% end -%>
