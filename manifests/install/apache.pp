@@ -33,7 +33,7 @@ class lamp::install::apache (
         notify  => Service["apache2"],
         require => Package["apache2"]
     }
-    file { "/etc/apache2/conf.d/security":
+    file { "/etc/apache2/conf-enabled/security":
         ensure => "file",
         content => template("lamp/apache/security.conf.erb"),
         notify  => Service["apache2"],

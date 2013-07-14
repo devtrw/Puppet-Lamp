@@ -1,0 +1,11 @@
+0.2.9
+    TODO: instead of conf-enabled, move security to conf-avalible and a2enconf
+    TODO: remove old ppa list clean up in init.pp
+TODO:0.2.7 -> 0.2.8
+update apache to 2.4
+  * add ".conf" onto generated configuration files. Make sure to account for this.
+  * Removed "NameVirtualHost" entries from ports.conf as apache no longer uses them
+  * Moved security from conf.d to conf-enabled
+update php to 5.5
+  * Moved imagick to pecl install since there is no package yet
+  * Changed php ppa from ppa:ondrej/php5 to php5-experimental

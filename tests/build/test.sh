@@ -156,6 +156,15 @@ install_puppet_modules () {
     cd "${SCRIPT_LOCATION}"
 }
 
+install_augeas () {
+    if ! dpkg --get-selections | grep -qi "libaugeas-ruby"; then
+        echo -e "\n${GREEN}Installing Augeas for Puppet"
+        echo -e "============================${WHITE}"
+        apt_update
+        apt-get install libaugeas-ruby -y
+    fi
+}
+
 # Install app with install manifest
 apply_puppet_manifest () {
     echo -e "\n${GREEN}Provisioning server according to Puppet manifest"
@@ -211,5 +220,6 @@ install_ruby_gems
 install_puppet
 install_librarian_puppet
 install_puppet_modules
+install_augeas
 apply_puppet_manifest
 

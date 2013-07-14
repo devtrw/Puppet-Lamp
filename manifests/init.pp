@@ -72,7 +72,7 @@ class lamp (
     $mysqlRootPassword      = "auto",
     $phpIniSettings         = {},
     $phpModules             = [],
-    $phpVersion             = "5.4.17~rc1-2~precise+1",
+    $phpVersion             = "latest",
     $serverName             = $::fqdn,
     $timezone               = "PST"
 ) {
@@ -120,11 +120,15 @@ The php dev module is installed automatically, please remove it from \
         timezone => $timezones[$timezone][localtimePath]
     }
 
-    $defaultRepositories = ["ppa:ondrej/php5"]
+    $defaultRepositories = ["ppa:ondrej/php5-experimental"]
     $allAptRepositories = flatten([$defaultRepositories, $aptRepositories])
     include ::apt
     ::apt::ppa { $allAptRepositories:
         require => Class["lamp::config::system"]
+    }
+    # clean up last version.
+    ->file { "/etc/apt/sources.list.d/ondrej-php5-precise.list":
+        ensure => "purged"
     }
 
     # Install apache

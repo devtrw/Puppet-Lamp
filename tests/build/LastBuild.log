@@ -1,0 +1,73 @@
+Provisioning server according to Puppet manifest
+================================================
+Warning: Could not retrieve fact fqdn
+Warning: Config file /etc/puppet/hiera.yaml not found, using Hiera defaults
+Notice: /Stage[main]/Lamp::Config::System/File[/etc/localtime]/ensure: ensure changed 'file' to 'link'
+Notice: /Stage[main]/Lamp::Config::System/Service[cron]: Triggered 'refresh' from 1 events
+Notice: /Stage[main]/Lamp/Apt::Ppa[ppa:ondrej/php5-experimental]/Exec[add-apt-repository-ppa:ondrej/php5-experimental]/returns: executed successfully
+Notice: /Stage[main]/Apt::Update/Exec[apt_update]: Triggered 'refresh' from 1 events
+Notice: /Stage[main]/Lamp/File[/etc/apt/sources.list.d/ondrej-php5-precise.list]/ensure: created
+Notice: /Stage[main]/Mysql/Package[mysql]/ensure: ensure changed 'purged' to 'present'
+Notice: /Stage[main]/Mysql::Password/File[/root/.my.cnf.backup]/ensure: created
+Notice: /Stage[main]/Mysql::Password/Exec[mysql_backup_root_my_cnf]/returns: executed successfully
+Notice: /Stage[main]/Mysql::Password/File[/root/.my.cnf]/ensure: created
+Notice: /Stage[main]/Mysql::Password/Exec[mysql_root_password]: Triggered 'refresh' from 1 events
+Notice: /Stage[main]/Php/Package[php]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Php/File[php.conf]/ensure: created
+Notice: /Stage[main]/Php::Devel/Package[php-devel]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Php::Pear/Package[php-pear]/ensure: ensure changed 'purged' to 'present'
+Notice: /Stage[main]//Lamp::App[full]/Mysql::User[full]/File[/root/puppet-mysql]/ensure: created
+Notice: /Stage[main]//Lamp::App[full]/Mysql::User[full]/File[mysqluser-full-localhost.sql]/ensure: created
+Notice: /Stage[main]//Lamp::App[full]/Mysql::User[full]/Exec[mysqluser-full-localhost]: Triggered 'refresh' from 1 events
+Notice: /Stage[main]//Lamp::App[full]/Mysql::Grant[full]/File[mysqlgrant-full-localhost-full.sql]/ensure: created
+Notice: /Stage[main]//Lamp::App[full]/Mysql::Grant[full]/Exec[mysqlgrant-full-localhost-full]: Triggered 'refresh' from 1 events
+Notice: /User[full]/ensure: created
+Notice: /Stage[main]//Lamp::App[full]/Lamp::Config::Apache::Vhost[ssl1.puppet-lamp.dev]/File[/etc/apache2/sites-available/99-ssl1.puppet-lamp.dev-443.conf]/ensure: defined content as '{md5}7f293ca1d74b585606f58b4dffc882fa'
+Notice: /Stage[main]/Lamp::Install::Apache/Apache::Module[ssl]/Exec[/usr/sbin/a2enmod ssl]/returns: executed successfully
+Notice: /Stage[main]//Lamp::App[full]/Lamp::Config::Apache::Vhost[full.puppet-lamp.dev-80]/File[/etc/apache2/sites-available/99-full.puppet-lamp.dev-80.conf]/ensure: defined content as '{md5}c4f62e6fa5aa48990dac775d66fd93a2'
+Notice: /Stage[main]//Lamp::App[full]/Lamp::Config::Apache::Vhost[full.puppet-lamp.dev-80]/Exec[enable-vhost-99-full.puppet-lamp.dev-80]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Apache/File[/etc/apache2/httpd.conf]/ensure: defined content as '{md5}67a32ed028c6652162ea68989617cc97'
+Notice: /Stage[main]/Lamp::Install::Apache/File[/etc/apache2/conf-enabled/security]/ensure: defined content as '{md5}8ba280afa9f811e7eb0c51f0f3b93093'
+Notice: /Stage[main]//Lamp::App[full]/Lamp::Config::Apache::Vhost[ssl2.puppet-lamp.dev]/File[/etc/apache2/sites-available/99-ssl2.puppet-lamp.dev-443.conf]/ensure: defined content as '{md5}08a00b4c2e5d45dc0130f774c93e9ef7'
+Notice: /Stage[main]/Lamp::Install::Apache/Apache::Module[rewrite]/Exec[/usr/sbin/a2enmod rewrite]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Apache/File[/etc/apache2/ports.conf]/content: content changed '{md5}5b3e91e891a0b15066295077aa6ac9a5' to '{md5}f3520964e3434749db30564dedc5f095'
+Notice: /Stage[main]//Lamp::App[full]/Lamp::Config::Apache::Vhost[ssl2.puppet-lamp.dev]/Exec[enable-vhost-99-ssl2.puppet-lamp.dev-443]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Php::Pear::Config[auto_discover]/Exec[pear-config-set-auto_discover]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[git]/Php::Pear::Module[pear/VersionControl_Git]/Exec[pear-pear/VersionControl_Git]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[xdebug]/Php::Pecl::Module[xdebug]/Exec[pecl-xdebug]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[phing]/Php::Pear::Module[pear.phing.info/phing]/Exec[pear-pear.phing.info/phing]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[phpcpd]/Php::Pear::Module[pear.phpunit.de/phpcpd]/Exec[pear-pear.phpunit.de/phpcpd]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[phpmd]/Php::Pear::Module[pear.phpmd.org/PHP_PMD]/Exec[pear-pear.phpmd.org/PHP_PMD]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[imagick]/Php::Pecl::Module[imagick]/Exec[pecl-imagick]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[imagick]/File[/etc/php5/conf.d/imagick.ini]/ensure: defined content as '{md5}576c98f6165afb0cf40c6a7a11561c4f'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[xdebug]/File[/etc/php5/conf.d/xdebug.ini]/ensure: defined content as '{md5}b9b4b3c73353ab1b459446cfa77458f3'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[sqlite]/Php::Module[sqlite]/Package[PhpModule_sqlite]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[xsl]/Php::Module[xsl]/Package[PhpModule_xsl]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[apc]/Php::Module[apc]/Package[PhpModule_apc]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[curl]/Php::Module[curl]/Package[PhpModule_curl]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[gd]/Php::Module[gd]/Package[PhpModule_gd]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[phpcs]/Php::Pear::Module[pear/PHP_CodeSniffer]/Exec[pear-pear/PHP_CodeSniffer]/returns: executed successfully
+Notice: /Stage[main]//Lamp::App[full]/Lamp::Config::Apache::Vhost[ssl1.puppet-lamp.dev]/Exec[enable-vhost-99-ssl1.puppet-lamp.dev-443]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[mysql]/Php::Module[mysql]/Package[PhpModule_mysql]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[oauth]/Package[libpcre3-dev]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[oauth]/Php::Pecl::Module[oauth]/Exec[pecl-oauth]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[oauth]/File[/etc/php5/conf.d/oauth.ini]/ensure: defined content as '{md5}689ea8d6dcb7e85d85655d24aeb3ddc9'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[intl]/Php::Module[intl]/Package[PhpModule_intl]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]//Lamp::App[minimal]/Lamp::Config::Apache::Vhost[minimal.puppet-lamp.dev-80]/File[/etc/apache2/sites-available/minimal.puppet-lamp.dev-80.conf]/ensure: defined content as '{md5}1fd8e5f774bfcf82e96f201411d856ac'
+Notice: /Stage[main]//Lamp::App[minimal]/Lamp::Config::Apache::Vhost[minimal.puppet-lamp.dev-80]/Exec[enable-vhost-minimal.puppet-lamp.dev-80]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[phpunit]/Php::Pear::Module[pear.phpunit.de/PHPUnit]/Exec[pear-pear.phpunit.de/PHPUnit]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Install::Php::Module[soap]/Php::Module[soap]/Package[PhpModule_soap]/ensure: ensure changed 'purged' to 'latest'
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/short_open_tag]/Php::Augeas[php-apache-PHP/short_open_tag]/Augeas[php_ini-php-apache-PHP/short_open_tag]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/log_errors]/Php::Augeas[php-apache-PHP/log_errors]/Augeas[php_ini-php-apache-PHP/log_errors]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[Date/date.timezone]/Php::Augeas[php-apache-Date/date.timezone]/Augeas[php_ini-php-apache-Date/date.timezone]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[Date/date.timezone]/Php::Augeas[php-cli-Date/date.timezone]/Augeas[php_ini-php-cli-Date/date.timezone]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/display_errors]/Php::Augeas[php-apache-PHP/display_errors]/Augeas[php_ini-php-apache-PHP/display_errors]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/display_errors]/Php::Augeas[php-cli-PHP/display_errors]/Augeas[php_ini-php-cli-PHP/display_errors]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/short_open_tag]/Php::Augeas[php-cli-PHP/short_open_tag]/Augeas[php_ini-php-cli-PHP/short_open_tag]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/display_startup_errors]/Php::Augeas[php-apache-PHP/display_startup_errors]/Augeas[php_ini-php-apache-PHP/display_startup_errors]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/display_startup_errors]/Php::Augeas[php-cli-PHP/display_startup_errors]/Augeas[php_ini-php-cli-PHP/display_startup_errors]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/log_errors]/Php::Augeas[php-cli-PHP/log_errors]/Augeas[php_ini-php-cli-PHP/log_errors]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/error_reporting]/Php::Augeas[php-apache-PHP/error_reporting]/Augeas[php_ini-php-apache-PHP/error_reporting]/returns: executed successfully
+Notice: /Stage[main]/Lamp::Install::Php/Lamp::Config::Php::Ini[PHP/error_reporting]/Php::Augeas[php-cli-PHP/error_reporting]/Augeas[php_ini-php-cli-PHP/error_reporting]/returns: executed successfully
+Notice: /Stage[main]/Apache/Service[apache]: Triggered 'refresh' from 43 events
+Notice: Finished catalog run in 512.30 seconds

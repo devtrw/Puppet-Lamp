@@ -3,5 +3,5 @@ Listen <%= port %>
 <% end -%>
 
 <% @allListenPorts.uniq.each do |port| -%>
-NameVirtualHost *:<%= port %>
+#NameVirtualHost *:<%= port %> !!! No longer needed with Apache 2.4
 <% end -%>

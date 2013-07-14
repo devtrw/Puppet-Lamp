@@ -36,7 +36,7 @@ define lamp::config::apache::vhost (
         default => "${priority}-${siteName}"
     }
 
-    file { "/etc/apache2/sites-available/${$realSiteName}":
+    file { "/etc/apache2/sites-available/${$realSiteName}.conf":
         ensure  => "file",
         content => template("lamp/apache/vhost.erb"),
         notify  => Service["apache2"],

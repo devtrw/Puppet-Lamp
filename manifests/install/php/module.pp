@@ -14,10 +14,16 @@ define lamp::install::php::module {
             require => Anchor["lamp::install::php::module::${name}::begin"]
         }
     } elsif ( member(["imagick"], $name) ) {
-        ::php::module { $name:
-            before        => Anchor["lamp::install::php::module::${name}::end"],
-            require       => Anchor["lamp::install::php::module::${name}::begin"],
-            version       => "latest"
+
+        ::php::pecl::module { "imagick":
+            before      => Anchor["lamp::install::php::module::${name}::end"],
+            require     => Anchor["lamp::install::php::module::${name}::begin"],
+            use_package => false
+        }
+        -> file { "/etc/php5/conf.d/imagick.ini":
+            content => "extension=imagick.so",
+            ensure  => file,
+            notify  => Service["apache2"]
         }
     } elsif ( member(["apc", "soap"], $name) ) {
         ::php::module { $name:
