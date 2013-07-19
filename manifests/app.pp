@@ -156,9 +156,8 @@ define lamp::app (
 
     $defaultApacheDirectives = {
         "Options"       => "-Indexes +FollowSymLinks",
-        "AllowOverride" => "ALL",
-        "Order"         => "Allow,Deny",
-        "Allow"         => "from all"
+        "AllowOverride" => "all",
+        "Require"       => "all granted"
     }
     $realApacheDirectives = merge($defaultApacheDirectives, $apacheDirectives)
 
