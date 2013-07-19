@@ -128,7 +128,7 @@ The php dev module is installed automatically, please remove it from \
     }
     # clean up last version.
     ->file { "/etc/apt/sources.list.d/ondrej-php5-precise.list":
-        ensure => "purged"
+        ensure => "absent"
     }
 
     # Install apache
