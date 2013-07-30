@@ -120,14 +120,14 @@ The php dev module is installed automatically, please remove it from \
         timezone => $timezones[$timezone][localtimePath]
     }
 
-    $defaultRepositories = ["ppa:ondrej/php5-experimental"]
+    $defaultRepositories = ["ppa:ondrej/php5", "ppa:ondrej/apache2"]
     $allAptRepositories = flatten([$defaultRepositories, $aptRepositories])
     include ::apt
     ::apt::ppa { $allAptRepositories:
         require => Class["lamp::config::system"]
     }
     # clean up last version.
-    ->file { "/etc/apt/sources.list.d/ondrej-php5-precise.list":
+    ->file { "/etc/apt/sources.list.d/ondrej-php5-experimental-precise.list":
         ensure => "absent"
     }
 

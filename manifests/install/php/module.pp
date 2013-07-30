@@ -20,9 +20,11 @@ define lamp::install::php::module {
             require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
         }
-        -> file { "/etc/php5/conf.d/imagick.ini":
+        -> file { "/etc/php5/mods-available/imagick.ini":
             content => "extension=imagick.so",
-            ensure  => file,
+            ensure  => file
+        }
+        -> exec { "/usr/sbin/php5enmod imagick":
             notify  => Service["apache2"]
         }
     } elsif ( member(["apc", "soap"], $name) ) {
@@ -74,11 +76,14 @@ define lamp::install::php::module {
             require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
         }
-        -> file { "/etc/php5/conf.d/oauth.ini":
+        -> file { "/etc/php5/mods-available/oauth.ini":
             content => "extension=oauth.so",
-            ensure  => file,
+            ensure  => file
+        }
+        -> exec { "/usr/sbin/php5enmod oauth":
             notify  => Service["apache2"]
         }
+
     } elsif ( $name == "phing" ) {
         ::php::pear::module { "pear.phing.info/phing":
             before      => Anchor["lamp::install::php::module::${name}::end"],
@@ -114,10 +119,12 @@ define lamp::install::php::module {
             require     => Anchor["lamp::install::php::module::${name}::begin"],
             use_package => false
         }
-        -> file { "/etc/php5/conf.d/xdebug.ini":
+        -> file { "/etc/php5/mods-available/xdebug.ini":
             before  => Anchor["lamp::install::php::module::${name}::end"],
             content => template("lamp/php/xdebug.ini"),
-            ensure  => file,
+            ensure  => file
+        }
+        -> exec { "/usr/sbin/php5enmod xdebug":
             notify  => Service["apache2"]
         }
     } else {
