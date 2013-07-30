@@ -21,11 +21,13 @@ class lamp::install::apache (
         require => Anchor["lamp::install::apache::begin"],
         before  => Anchor["lamp::install::apache::end"]
     }
-    file { "/etc/apache2/httpd.conf":
+    file { "/etc/apache2/conf-available/httpd.conf":
         ensure => "file",
-        content => template("lamp/apache/httpd.conf.erb"),
-        notify  => Service["apache2"],
-        require => Package["apache2"]
+        require => Package["apache2"],
+        content => template("lamp/apache/httpd.conf.erb")
+    }
+    -> exec{ "/usr/sbin/a2enconf httpd":
+      notify  => Service["apache2"]
     }
     file { "/etc/apache2/ports.conf":
         ensure => "file",
@@ -33,12 +35,17 @@ class lamp::install::apache (
         notify  => Service["apache2"],
         require => Package["apache2"]
     }
-    file { "/etc/apache2/conf-enabled/security.conf":
+    file { "/etc/apache2/conf-available/security.conf":
         ensure => "file",
-        content => template("lamp/apache/security.conf.erb"),
-        notify  => Service["apache2"],
-        require => Package["apache2"]
+        require => Package["apache2"],
+        content => template("lamp/apache/security.conf.erb")
     }
+    -> exec{"/usr/sbin/a2enconf security":
+        notify  => Service["apache2"]
+    }
+
+    # Clean up old config files if they are lying around
+    file {["/etc/apache2/httpd.conf"]: ensure => "absent"}
 
     exec { "disable-vhost-000-default":
         command => "a2dissite 000-default",
