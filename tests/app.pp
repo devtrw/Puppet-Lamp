@@ -45,8 +45,9 @@ lamp::app { "full":
              "key"  => "/etc/ssl/private/ssl-cert-snakeoil.key"
         },
         "ssl2.puppet-lamp.dev" => {
-             "cert" => "/etc/ssl/certs/ssl-cert-snakeoil.pem",
-             "key"  => "/etc/ssl/private/ssl-cert-snakeoil.key"
+             "cert"  => "/etc/ssl/certs/ssl-cert-snakeoil.pem",
+             "key"   => "/etc/ssl/private/ssl-cert-snakeoil.key",
+             "chain" => "/etc/ssl/private/ssl-cert-snakeoil.key" # This would normallay be a chainfile
         }
     }
 }

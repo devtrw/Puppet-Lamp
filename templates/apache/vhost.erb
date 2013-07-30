@@ -20,6 +20,9 @@
 
         SSLCertificateFile <%= @sslVhosts[@realServerName]["cert"] %>
         SSLCertificateKeyFile <%= @sslVhosts[@realServerName]["key"] %>
+        <% if @sslVhosts[@realServerName].has_key?("chain") -%>
+            SSLCertificateChainFile <%= @sslVhosts[@realServerName]["chain"] %>
+        <% end -%>
 
         # Only enable ssl for php files, no need for unnecessary processing on
         # static pages/files
