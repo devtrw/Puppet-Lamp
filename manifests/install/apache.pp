@@ -49,7 +49,7 @@ class lamp::install::apache (
 
     exec { "disable-vhost-000-default":
         command => "a2dissite 000-default",
-        onlyif  => "test -f /etc/apache2/sites-enabled/000-default",
+        onlyif  => "test -f /etc/apache2/sites-enabled/000-default*",
         path    => "/usr/bin:/usr/sbin",
         notify  => Service["apache2"],
         require => Package["apache2"]
